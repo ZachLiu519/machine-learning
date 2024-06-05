@@ -49,20 +49,19 @@ class RandomForestClassifier:
     def _single_tree_predict(self, tree, X):
         return tree.predict(X)
 
+    def _single_sample_predict(self, X):
+        X = np.array(object=X).reshape(1, -1)
+        predictions = [tree.predict(X) for tree in self.trees]
+        return mode(predictions, axis=None)[0]
+
     def predict(self, X):
         # voting on the predictions from each tree
-        predictions = []
+        if X.ndim == 1:
+            return self._single_sample_predict(X)
 
-        # Parallelize the prediction process
-        with multiprocessing.Pool(self.n_jobs) as pool:
-            predictions = pool.starmap(
-                self._single_tree_predict, [(tree, X) for tree in self.trees]
-            )
-
-        # select the most common prediction using stats.mode
-        predictions = np.array(predictions).T
-
-        return mode(predictions, axis=1)[0]
+        return np.apply_along_axis(
+            lambda sample: self._single_sample_predict(sample), 1, X
+        )
 
     def score(self, X, y):
         return np.mean(self.predict(X) == y)

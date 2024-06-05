@@ -17,7 +17,7 @@ def main():
 
     # Instantiate your Cython class
     tree_classifier = RandomForestClassifier(
-        n_estimators=100,
+        n_estimators=500,
         criterion="log_loss",
         max_depth=3,
         min_samples_split=4,
@@ -47,7 +47,7 @@ def main():
 
     # Instantiate the sklearn class
     sklearn_tree_classifier = SklearnRandomForestClassifier(
-        n_estimators=20,
+        n_estimators=500,
         criterion="log_loss",
         max_depth=3,
         min_samples_split=4,

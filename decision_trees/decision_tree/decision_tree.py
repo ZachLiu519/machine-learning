@@ -2,7 +2,8 @@ import abc
 
 import numpy as np
 import numpy.typing as npt
-from criterion import impurity_func
+
+from decision_trees.decision_tree.criterion import impurity_func
 
 
 class DecisionTreeNode:
@@ -187,7 +188,8 @@ class DecisionTreeClassifier(DecisionTree):
         return best_impurity, best_criteria
 
     def predict(self, X):
-        return np.array([self._predict_single(x) for x in X])
+        predictions = np.apply_along_axis(self._predict_single, 1, X)
+        return predictions
 
     def _predict_single(self, x):
         node = self.tree

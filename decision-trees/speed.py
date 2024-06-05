@@ -2,7 +2,7 @@ import cProfile
 import pstats
 
 from decision_tree import *  # Change to your specific import
-from sklearn.datasets import fetch_california_housing, load_breast_cancer
+from sklearn.datasets import load_breast_cancer, load_diabetes
 from sklearn.model_selection import train_test_split
 from sklearn.tree import DecisionTreeClassifier as SklearnDecisionTreeClassifier
 from sklearn.tree import DecisionTreeRegressor as SklearnDecisionTreeRegressor
@@ -14,7 +14,9 @@ def main():
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.9, random_state=3)
 
     # Instantiate your Cython class
-    tree_classifier = DecisionTreeClassifier(criterion="log_loss", max_depth=3)
+    tree_classifier = DecisionTreeClassifier(
+        criterion="gini", max_depth=3, min_samples_split=4, max_features=2,
+    )
 
     # Profile the fitting process
     profiler = cProfile.Profile()
@@ -30,7 +32,9 @@ def main():
     print("Testing score:", tree_classifier.score(X_test, y_test))
 
     # Instantiate the sklearn class
-    sklearn_tree_classifier = SklearnDecisionTreeClassifier(criterion="log_loss", max_depth=3)
+    sklearn_tree_classifier = SklearnDecisionTreeClassifier(
+        criterion="gini", max_depth=3, min_samples_split=4, max_features=2,
+    )
 
     sklearn_tree_classifier.fit(X_train, y_train)
 
@@ -39,7 +43,7 @@ def main():
 
     # test against regressors
 
-    data = fetch_california_housing()
+    data = load_diabetes()
     X, y = data.data, data.target
     X_train, X_test, y_train, y_test = train_test_split(X, y, train_size=0.9, random_state=3)
 

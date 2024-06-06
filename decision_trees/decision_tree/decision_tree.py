@@ -193,13 +193,13 @@ class DecisionTreeClassifier(DecisionTree):
 
     def _predict_single(self, x):
         node = self.tree
-        while (
-            node and not node.is_leaf and not (node.left is None and node.right is None)
-        ):
-            if x[node.feature_index] <= node.threshold:
+        while node and not node.is_leaf:
+            if x[node.feature_index] <= node.threshold and node.left:
                 node = node.left
-            else:
+            elif x[node.feature_index] > node.threshold and node.right:
                 node = node.right
+            else:
+                break
         assert node
         return np.argmax(node.counts)
 
@@ -280,17 +280,17 @@ class DecisionTreeRegressor(DecisionTree):
         return best_impurity, best_criteria
 
     def predict(self, X):
-        return np.array([self._predict_single(x) for x in X])
+        return np.apply_along_axis(self._predict_single, 1, X)
 
     def _predict_single(self, x):
         node = self.tree
-        while (
-            node and not node.is_leaf and not (node.left is None and node.right is None)
-        ):
-            if x[node.feature_index] <= node.threshold:
+        while node and not node.is_leaf:
+            if x[node.feature_index] <= node.threshold and node.left:
                 node = node.left
-            else:
+            elif x[node.feature_index] > node.threshold and node.right:
                 node = node.right
+            else:
+                break
         assert node
         return np.mean(node.labels)
 

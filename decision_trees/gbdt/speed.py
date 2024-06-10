@@ -37,10 +37,7 @@ def main():
     stats = pstats.Stats(profiler).sort_stats("cumulative")
     stats.print_stats()
 
-    time_start = time.time()
     print("Training score:", tree_classifier.score(X_train, y_train))
-    time_end = time.time()
-    print("Time taken predicting training:", time_end - time_start)
     print("Testing score:", tree_classifier.score(X_test, y_test))
 
     # Instantiate the sklearn class
@@ -50,7 +47,10 @@ def main():
         max_features=2,
     )
 
+    time_start = time.time()
     sklearn_tree_classifier.fit(X_train, y_train)
+    time_end = time.time()
+    print("Time taken predicting fitting:", time_end - time_start)
 
     print("Training score:", sklearn_tree_classifier.score(X_train, y_train))
     print("Testing score:", sklearn_tree_classifier.score(X_test, y_test))

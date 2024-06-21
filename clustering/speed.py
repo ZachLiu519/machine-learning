@@ -16,17 +16,19 @@ def main(
         random_state=random_state,
     )
 
-    kmeans = KMeans(num_clusters=n_clusters)
+    kmeans = KMeans(num_clusters=n_clusters, random_state=random_state)
     time_start = time.time()
     kmeans.fit(X)
     time_end = time.time()
-    print(f"KMeans: {time_end - time_start:.2f} seconds")
+    print(f"KMeans: {time_end - time_start:.4f} seconds")
 
-    kmeans_skl = KMeansSKL(n_clusters=n_clusters, init="random")
+    kmeans_skl = KMeansSKL(
+        n_clusters=n_clusters, init="random", random_state=random_state
+    )
     time_start = time.time()
     kmeans_skl.fit(X)
     time_end = time.time()
-    print(f"KMeansSKL: {time_end - time_start:.2f} seconds")
+    print(f"KMeansSKL: {time_end - time_start:.4f} seconds")
 
     print(kmeans.centroids)
 
